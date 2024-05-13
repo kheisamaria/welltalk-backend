@@ -5,15 +5,14 @@ import org.springframework.stereotype.Repository;
 
 import com.communicators.welltalk.Entity.TeacherEntity;
 
-// import java.util.List;
-// import java.util.Optional;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer> {
-    // List<TeacherEntity> findByIsDeletedFalse();
+    List<TeacherEntity> findByIsDeletedFalse();
 
-    // Optional<TeacherEntity> findByIdandIsDeletedFalse(int id);
+    Optional<TeacherEntity> findByIdAndIsDeletedFalse(int id);
 
-    // Optional<TeacherEntity> findByInstitutionalEmailAndIsDeletedFalse(String
-    // institutionalEmail);
+    Optional<TeacherEntity> findByInstitutionalEmailAndIsDeletedFalse(String institutionalEmail);
 }

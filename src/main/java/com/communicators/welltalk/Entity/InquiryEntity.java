@@ -21,21 +21,21 @@ public class InquiryEntity {
     private int inquiryId;
 
     @ManyToOne
-    @JoinColumn(name = "senderId")
+    @JoinColumn(name = "senderId", referencedColumnName = "id")
     private StudentEntity student;
 
     private String subject;
 
     private String messageInquiry;
 
-    private Boolean status;
+    private boolean status;
 
     private LocalDate date;
 
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
     @ManyToOne
-    @JoinColumn(name = "counselorId")
+    @JoinColumn(name = "counselorId", referencedColumnName = "id")
     private CounselorEntity counselor;
 
     private String counselorReply;
@@ -47,7 +47,7 @@ public class InquiryEntity {
     public InquiryEntity() {
     }
 
-    public InquiryEntity(StudentEntity student, String subject, String messageInquiry, Boolean status, LocalDate date,
+    public InquiryEntity(StudentEntity student, String subject, String messageInquiry, boolean status, LocalDate date,
             CounselorEntity counselor, String counselorReply, String messageReply,
             LocalDate replyDate) {
         this.student = student;
@@ -62,7 +62,7 @@ public class InquiryEntity {
         this.replyDate = replyDate;
     }
 
-    public InquiryEntity(StudentEntity student, String subject, String messageInquiry, Boolean status,
+    public InquiryEntity(StudentEntity student, String subject, String messageInquiry, boolean status,
             LocalDate date) {
         this.student = student;
         this.subject = subject;
@@ -112,11 +112,11 @@ public class InquiryEntity {
         this.messageInquiry = messageInquiry;
     }
 
-    public Boolean getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
@@ -128,11 +128,11 @@ public class InquiryEntity {
         this.date = date;
     }
 
-    public Boolean getIsDeleted() {
+    public boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(Boolean isDeleted) {
+    public void setIsDeleted(boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
 

@@ -1,8 +1,14 @@
 package com.communicators.welltalk.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,39 +18,51 @@ import com.communicators.welltalk.Service.InquiryService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/inquiry")
+@RequestMapping("/user/inquiry")
 public class InquiryController {
 
     @Autowired
     InquiryService inquiryService;
 
     @PostMapping("/createInquiry")
-    public InquiryEntity insertInquiry(InquiryEntity inquiry) {
-        return inquiryService.registerInquiry(inquiry);
+    public ResponseEntity<InquiryEntity> insertInquiry(@RequestBody InquiryEntity inquiry) {
+        InquiryEntity newInquiry = inquiryService.registerInquiry(inquiry);
+        return new ResponseEntity<>(newInquiry, HttpStatus.CREATED);
     }
 
     @GetMapping("/getAllInquiries")
-    public List<InquiryEntity> getAllInquiries() {
-        return inquiryService.getAllInquiries();
+    public ResponseEntity<List<InquiryEntity>> getAllInquiries() {
+        List<InquiryEntity> inquiries = inquiryService.getAllInquiries();
+        return new ResponseEntity<>(inquiries, HttpStatus.OK);
     }
 
     @GetMapping("/getInquiryById/{id}")
-    public InquiryEntity getInquiryById(int id) {
-        return inquiryService.getInquiryById(id);
+    public ResponseEntity<InquiryEntity> getInquiryById(@PathVariable int id) {
+        InquiryEntity inquiry = inquiryService.getInquiryByInquiryId(id);
+        if (inquiry != null) {
+            return new ResponseEntity<>(inquiry, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @PostMapping("/updateInquiry")
-    public InquiryEntity updateInquiry(InquiryEntity inquiry) {
-        return inquiryService.updateInquiry(inquiry);
+    @PutMapping("/updateInquiry/{id}")
+    public ResponseEntity<InquiryEntity> updateInquiry(@PathVariable int id, @RequestBody InquiryEntity inquiry) {
+        InquiryEntity updatedInquiry = inquiryService.updateInquiry(id, inquiry);
+        if (updatedInquiry == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedInquiry, HttpStatus.OK);
     }
 
-    @GetMapping("/deleteInquiry/{id}")
-    public String deleteInquiry(int id) {
-        return inquiryService.deleteInquiry(id);
+    @DeleteMapping("/deleteInquiry/{id}")
+    public ResponseEntity<Void> deleteInquiry(@PathVariable int id) {
+        boolean deleted = inquiryService.deleteInquiry(id);
+        if (deleted) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @GetMapping("/getAllIsNotDeletedInquiries")
-    public List<InquiryEntity> getAllIsNotDeletedInquiries() {
-        return inquiryService.getAllIsNotDeletedInquiries();
-    }
 }

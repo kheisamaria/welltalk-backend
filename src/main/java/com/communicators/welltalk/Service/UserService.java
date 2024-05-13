@@ -23,14 +23,14 @@ public class UserService {
     }
 
     public UserEntity getUserById(int id) {
-        return userRepository.findById(id).get();
+        return userRepository.findByIdAndIsDeletedFalse(id).get();
     }
 
     public UserEntity getUserByIdAndIsNotDeleted(int id) {
         return userRepository.findByIdAndIsDeletedFalse(id).get();
     }
 
-    public boolean isInstitutionalEmailPresent(String institutionalEmail){
+    public boolean isInstitutionalEmailPresent(String institutionalEmail) {
         return userRepository.findByInstitutionalEmailAndIsDeletedFalse(institutionalEmail).isPresent();
     }
 
@@ -38,18 +38,35 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public UserEntity updateUser(UserEntity user) {
-        return userRepository.save(user);
+    @SuppressWarnings("finally")
+    public UserEntity updateUser(int id, UserEntity user) {
+        UserEntity userToUpdate = new UserEntity();
+        try {
+            userToUpdate = userRepository.findByIdAndIsDeletedFalse(id).get();
+
+            userToUpdate.setInstitutionalEmail(user.getInstitutionalEmail());
+            userToUpdate.setFirstName(user.getFirstName());
+            userToUpdate.setLastName(user.getLastName());
+            userToUpdate.setGender(user.getGender());
+            userToUpdate.setPassword(user.getPassword());
+            userToUpdate.setImage(user.getImage());
+            userToUpdate.setDateOfModification(user.getDateOfModification());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("User " + user.getId() + " does not exist.");
+        } finally {
+            return userRepository.save(userToUpdate);
+        }
     }
 
-    public String deleteUser(int id) {
-        String message = "";
-
-        if (userRepository.findById(id) != null) {
-            userRepository.deleteById(id);
-            message = "Student " + id + " is successfully deleted!";
-        } else
-            message = "Student " + id + " does not exist.";
-        return message;
+    public boolean deleteUser(int id) {
+        UserEntity user = userRepository.findById(id).get();
+        if (user != null) {
+            user.setIsDeleted(true);
+            userRepository.save(user);
+            return true;
+        } else {
+            System.out.println("User " + id + " does not exist.");
+            return false;
+        }
     }
 }
