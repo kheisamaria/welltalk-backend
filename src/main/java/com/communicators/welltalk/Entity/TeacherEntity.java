@@ -8,7 +8,7 @@ import javax.persistence.Table;
 @Table(name = "tblteacher")
 public class TeacherEntity extends UserEntity {
 
-    @Column(name = "collge")
+    @Column(name = "college")
     private String college;
 
     public TeacherEntity() {
